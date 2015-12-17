@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+if [[ "$(uname)" = "Darwin" ]]; then
+  need_user=
+else
+  uid=$(id -u)
+  gid=$(id -g)
+  need_user="-u $uid:$gid"
+fi
+
+docker run \
+  -it \
+  --rm \
+  -v $(pwd):$(pwd) \
+  -w $(pwd) \
+  $need_user \
+  "$@"
