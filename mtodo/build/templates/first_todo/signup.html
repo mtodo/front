@@ -1,0 +1,34 @@
+
+<div class="primary title-bar">
+  <span class="center title"><a ui-sref="firstTodo.signup">
+    Almost done!
+  </a></span>
+
+  <span class="left"><a ui-sref="firstTodo">
+    <img zf-iconic="" icon="chevron" data-direction="left" size="small">
+    Back
+  </a></span>
+
+  <span class="right"><a ui-sref="firstTodo.signup">
+    Done
+    <img zf-iconic="" icon="circle-check" size="small">
+  </a></span>
+</div>
+
+<div class="vertical grid-container">
+  <div class="grid-content">
+    <h1>Create account</h1>
+    <p>To secure and access your todos, you need to create an account.</p>
+  </div>
+
+  <div class="grid-content">
+    <form>
+      <input type="email" name="email" required placeholder="E-mail"/>
+      <input type="password" name="password" required placeholder="Password" />
+    </form>
+  </div>
+
+  <div class="grid-content">
+    <em>Returning user? <a ui-sref="signin">Sign in here.</a></em>
+  </div>
+</div>
