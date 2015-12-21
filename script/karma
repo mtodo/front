@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+script/_run \
+  -p 9876:9876 \
+  -e HOME="$(pwd)" \
+  mtodo/foundation \
+  ./node_modules/karma/bin/karma "$@"
