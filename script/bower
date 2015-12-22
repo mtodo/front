@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+script/_run \
+  -e HOME="$(pwd)" \
+  mtodo/foundation \
+  bower "$@"
