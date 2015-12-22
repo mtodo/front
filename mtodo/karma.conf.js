@@ -19,6 +19,7 @@ module.exports = function(config) {
       'build/assets/js/templates.js',
       'build/assets/js/routes.js',
       'build/assets/js/app.js',
+      'test/support/*.js',
       'test/**/*Spec.js'
     ],
 
