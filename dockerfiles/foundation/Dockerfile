@@ -9,6 +9,8 @@ RUN gem install --no-doc bundler sass
 RUN apk add --update python
 RUN apk add --update build-base
 
+RUN npm install -g browserify
+
 EXPOSE 8080
 
 ENTRYPOINT []
