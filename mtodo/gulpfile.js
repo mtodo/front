@@ -5,12 +5,13 @@
 // 1. LIBRARIES
 // - - - - - - - - - - - - - - -
 
-var $        = require('gulp-load-plugins')();
-var argv     = require('yargs').argv;
-var gulp     = require('gulp');
-var rimraf   = require('rimraf');
-var router   = require('front-router');
-var sequence = require('run-sequence');
+var $          = require('gulp-load-plugins')();
+var argv       = require('yargs').argv;
+var gulp       = require('gulp');
+var rimraf     = require('rimraf');
+var router     = require('front-router');
+var sequence   = require('run-sequence');
+var jsonminify = require('gulp-jsonminify');
 
 // Check for --production flag
 var isProduction = !!(argv.production);
@@ -22,7 +23,7 @@ var paths = {
   assets: [
     './client/**/*.*',
     '!./client/templates/**/*.*',
-    '!./client/assets/{scss,js}/**/*.*'
+    '!./client/assets/{scss,js,json}/**/*.*'
   ],
   // Sass will check these folders for files when you use @import.
   sass: [
@@ -48,6 +49,10 @@ var paths = {
   appJS: [
     'client/assets/js/app.js',
     'client/assets/js/first_todo.js'
+  ],
+  // Files for app resources
+  appJSON: [
+    'client/assets/json/**/*.json'
   ]
 }
 
@@ -64,6 +69,16 @@ gulp.task('copy', function() {
   return gulp.src(paths.assets, {
     base: './client/'
   })
+    .pipe(gulp.dest('./build'))
+  ;
+});
+
+// Copies all application JSON resources
+gulp.task('copy:minjson', function() {
+  return gulp.src(paths.appJSON, {
+    base: './client/'
+  })
+    .pipe(jsonminify())
     .pipe(gulp.dest('./build'))
   ;
 });
@@ -162,7 +177,13 @@ gulp.task('server', ['build'], function() {
 
 // Builds your entire app once, without starting a server
 gulp.task('build', function(cb) {
-  sequence('clean', ['copy', 'copy:foundation', 'sass', 'uglify'], 'copy:templates', cb);
+  sequence(
+    'clean',
+    ['copy', 'copy:foundation', 'sass', 'uglify'],
+    'copy:templates',
+    'copy:minjson',
+    cb
+  );
 });
 
 // Default task: builds your app, starts a server, and recompiles assets when they change
@@ -178,4 +199,7 @@ gulp.task('default', ['server'], function () {
 
   // Watch app templates
   gulp.watch(['./client/templates/**/*.html'], ['copy:templates']);
+
+  // Watch app json resources
+  gulp.watch(paths.appJSON, ['copy:minjson']);
 });

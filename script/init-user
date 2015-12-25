@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+./script/_run \
+  -e HOME="$(pwd)" \
+  mtodo/foundation \
+  git config --global user.email "robot@mtodo.github.io"
+
+./script/_run \
+  -e HOME="$(pwd)" \
+  mtodo/foundation \
+  git config --global user.name "mtodo robot"
