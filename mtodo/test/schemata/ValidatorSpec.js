@@ -91,12 +91,18 @@
         expect(v).toEqual(true);
       });
 
-      it("passes for link with missing required param", () => {
+      it("fails for link with missing required param", () => {
         var v = Validator.request("POST /welcome/user", {
           greeting: "hey"
         });
         expect(v).toEqual(false);
-        expect(Validator.error.message).toEqual("Stub error message")
+        expect(Validator.error.message).toEqual("Stub error message");
+      });
+
+      it("fails when link not found", () => {
+        var v = Validator.request("GET /stuff", {});
+        expect(v).toEqual(false);
+        expect(Validator.error.message).toEqual("Unable to find link 'GET /stuff'");
       });
     });
   });
