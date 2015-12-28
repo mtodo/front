@@ -79,12 +79,12 @@
 
     describe("request validation", () => {
       it("passes for link without params", () => {
-        var v = Validator.request("GET /welcome", {});
+        var v = Validator.request("welcome", "GET", "/welcome", {});
         expect(v).toEqual(true);
       });
 
       it("passes for link with params", () => {
-        var v = Validator.request("POST /welcome/user", {
+        var v = Validator.request("welcome", "POST", "/welcome/user", {
           name: "user",
           greeting: "hey"
         });
@@ -92,7 +92,7 @@
       });
 
       it("fails for link with missing required param", () => {
-        var v = Validator.request("POST /welcome/user", {
+        var v = Validator.request("welcome", "POST", "/welcome/user", {
           greeting: "hey"
         });
         expect(v).toEqual(false);
@@ -100,7 +100,7 @@
       });
 
       it("fails when link not found", () => {
-        var v = Validator.request("GET /stuff", {});
+        var v = Validator.request("welcome", "GET", "/stuff", {});
         expect(v).toEqual(false);
         expect(Validator.error.message).toEqual("Unable to find link 'GET /stuff'");
       });
