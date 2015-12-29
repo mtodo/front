@@ -75,6 +75,7 @@
 
     beforeEach(inject((_Validator_) => {
       Validator = _Validator_;
+      Validator.setSchema(schema);
     }));
 
     describe("request validation", () => {
