@@ -93,7 +93,9 @@
     describe("request validation", () => {
       it("passes for link without params", () => {
         var v = Validator.request("welcome", "GET", "/welcome", {});
+
         expect(v).toEqual(true);
+        expect(Validator.error.message).toEqual("");
       });
 
       it("passes for link with params", () => {
@@ -101,7 +103,9 @@
           name: "user",
           greeting: "hey"
         });
+
         expect(v).toEqual(true);
+        expect(Validator.error.message).toEqual("");
       });
 
       it("fails for link with missing required param", () => {
@@ -115,7 +119,13 @@
       it("fails when link not found", () => {
         var v = Validator.request("welcome", "GET", "/stuff", {});
         expect(v).toEqual(false);
-        expect(Validator.error.message).toEqual("Unable to find link 'GET /stuff'");
+        expect(Validator.error.message).toEqual("Link GET /stuff is not found for resource welcome");
+      });
+
+      it("fails when resource not found", () => {
+        var v = Validator.request("nope", "GET", "/stuff", {});
+        expect(v).toEqual(false);
+        expect(Validator.error.message).toEqual("Resource nope is not found");
       });
     });
   });
