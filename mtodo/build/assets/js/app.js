@@ -82,18 +82,26 @@
     this.error = {};
     this.ajv = {};
 
-    this.setSchema = function(schema) {
-      this.resources = {};
+    this.setSchema = function(urlPrefix, schema, done) {
+      var that = this;
+
+      that.resources = {};
       for (var resource in schema.definitions) {
         if (!Object.prototype.hasOwnProperty(schema.definitions, resource)) { continue; }
-        this.addResource(resource, schema.definitions[resource]);
+        that.addResource(resource, schema.definitions[resource]);
       }
 
-      $http({method: "GET", url: "/assets/json/hyper-schema.json"}).then(function success(response) {
-        this.ajv = Ajv();
-        this.ajv.addMetaSchema(JSON.parse(response), "http://json-schema.org/draft-04/hyper-schema");
-        this.ajv.compile(schema);
-      }, function failure(response) {});
+      $http({method: "GET", url: urlPrefix + "assets/json/hyper-schema.json"}).then(function success(response) {
+        console.log("http get success");
+        that.ajv = Ajv();
+        that.ajv.addMetaSchema(response.data, "http://json-schema.org/draft-04/hyper-schema", true);
+        console.log("Added meta schema");
+        that.ajv.compile(schema);
+        done(true);
+      }, function failure(response) {
+        console.log("http get failure");
+        done(false);
+      });
     };
 
     this.addResource = function(name, schema) {

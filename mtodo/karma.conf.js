@@ -20,7 +20,14 @@ module.exports = function(config) {
       'build/assets/js/routes.js',
       'build/assets/js/app.js',
       'test/support/*.js',
-      'test/**/*Spec.js'
+      'test/**/*Spec.js',
+
+      {
+        pattern: 'build/assets/json/**/*.json',
+        watched: true,
+        served: true,
+        included: false
+      }
     ],
 
 

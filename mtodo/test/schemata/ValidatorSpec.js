@@ -2,7 +2,7 @@
   "use strict";
 
   describe("schemata Validator", () => {
-    var Validator;
+    var Validator, $httpBackend;
     var schema = {
       "$schema": "http://json-schema.org/draft-04/hyper-schema",
     type: ["object"],
@@ -73,10 +73,22 @@
 
     beforeEach(module("application"));
 
-    beforeEach(inject((_Validator_) => {
-      Validator = _Validator_;
-      Validator.setSchema(schema);
-    }));
+    beforeEach(angular.mock.http.init);
+    afterEach(angular.mock.http.reset);
+
+    beforeEach((done) => {
+      inject((_Validator_, _$httpBackend_) => {
+        $httpBackend = _$httpBackend_;
+        $httpBackend.whenGET(/.+\.html/).respond("");
+        $httpBackend.whenGET("/base/build/assets/json/hyper-schema.json").passThrough();
+
+        Validator = _Validator_;
+        Validator.setSchema("/base/build/", schema, (ok) => {
+          if (!ok) { throw "Unable to set schema"; }
+          done();
+        });
+      });
+    });
 
     describe("request validation", () => {
       it("passes for link without params", () => {
