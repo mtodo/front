@@ -7,6 +7,7 @@
     this.resources = {};
     this.error = {message: ""};
     this.ajv = {};
+    this.compiled = {};
 
     this.setSchema = function(urlPrefix, schema, done) {
       var that = this;
@@ -20,7 +21,7 @@
       $http({method: "GET", url: urlPrefix + "assets/json/hyper-schema.json"}).then(function success(response) {
         that.ajv = Ajv();
         that.ajv.addMetaSchema(response.data, "http://json-schema.org/draft-04/hyper-schema", true);
-        that.ajv.compile(schema);
+        that.ajv.addSchema(schema, "schemata");
         done(true);
       }, function failure(response) {
         done(false);
@@ -33,7 +34,8 @@
 
     this.request = function(resource, method, href, rawData) {
       var resources = this.resources,
-          error = this.error;
+          error = this.error,
+          ajv = this.ajv;
 
       error.message = "";
 
@@ -45,11 +47,12 @@
       var data = Jsonary.create(rawData);
       data.addSchema(resources[resource]);
 
-      var foundLink, links = data.links();
+      var foundLink, foundIdx, links = data.links();
       for (var i = 0; i < links.length; i++) {
         var link = links[i];
         if (link.method === method && link.href === href) {
           foundLink = link;
+          foundIdx = i;
         }
       }
 
@@ -58,7 +61,22 @@
         return false;
       }
 
-      return true;
+      var validate = this.ajvCompile("schemata#/definitions/" + resource + "/links/" + foundIdx + "/schema");
+      var valid = validate(rawData);
+      if (!valid) {
+        this.error = validate.errors[0];
+      }
+
+      return valid;
+    };
+
+    this.ajvCompile = function(ref) {
+      if (Object.prototype.hasOwnProperty.call(this.compiled, ref)) {
+        return this.compiled[ref];
+      }
+
+      this.compiled[ref] = this.ajv.compile({"$ref": ref});
+      return this.compiled[ref];
     };
   }]);
 })();

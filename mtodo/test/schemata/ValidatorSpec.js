@@ -113,7 +113,7 @@
           greeting: "hey"
         });
         expect(v).toEqual(false);
-        expect(Validator.error.message).toEqual("Stub error message");
+        expect(Validator.error.message).toEqual("should have required property 'name'");
       });
 
       it("fails when link not found", () => {
