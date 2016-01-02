@@ -88,7 +88,7 @@
 
       that.resources = {};
       for (var resource in schema.definitions) {
-        if (!Object.prototype.hasOwnProperty.call(schema.definitions, resource)) { continue; }
+        if (!this.hasKey(schema.definitions, resource)) { continue; }
         that.addResource(resource, schema.definitions[resource]);
       }
 
@@ -107,13 +107,52 @@
     };
 
     this.request = function(resource, method, href, rawData) {
+      this.error.message = "";
+
+      var found = this.findLink(resource, method, href, rawData);
+      if (!found) {
+        return false;
+      }
+
+      var validate = this.ajvCompile(
+        "schemata#/definitions/" + resource + "/links/" + found.idx + "/schema",
+        "self"
+      );
+
+      var valid = validate(rawData);
+      if (!valid) {
+        this.error = validate.errors[0];
+      }
+
+      return valid;
+    };
+
+    this.response = function(resource, method, href, rawData) {
+      this.error.message = "";
+
+      var found = this.findLink(resource, method, href, rawData);
+      if (!found) {
+        return false;
+      }
+
+      var validate = this.ajvCompile(
+        "schemata#/definitions/" + resource,
+        found.link.rel
+      );
+
+      var valid = validate(rawData);
+      if (!valid) {
+        this.error = validate.errors[0];
+      }
+
+      return valid;
+    };
+
+    this.findLink = function(resource, method, href, rawData) {
       var resources = this.resources,
-          error = this.error,
-          ajv = this.ajv;
+          error = this.error;
 
-      error.message = "";
-
-      if (!Object.prototype.hasOwnProperty.call(resources, resource)) {
+      if (!this.hasKey(resources, resource)) {
         error.message = "Resource " + resource + " is not found";
         return false;
       }
@@ -135,22 +174,40 @@
         return false;
       }
 
-      var validate = this.ajvCompile("schemata#/definitions/" + resource + "/links/" + foundIdx + "/schema");
-      var valid = validate(rawData);
-      if (!valid) {
-        this.error = validate.errors[0];
-      }
-
-      return valid;
+      return {
+        link: foundLink,
+        idx: foundIdx
+      };
     };
 
-    this.ajvCompile = function(ref) {
-      if (Object.prototype.hasOwnProperty.call(this.compiled, ref)) {
-        return this.compiled[ref];
+    this.selfLinkRel = function(ref) { return {"$ref": ref}; };
+    this.instancesLinkRel = function(ref) { return {
+      type: ["array"],
+      items: { "$ref": ref }
+    } }
+
+    this.linkRels = {
+      self: this.selfLinkRel,
+      create: this.selfLinkRel,
+      instances: this.instancesLinkRel
+    };
+
+    this.ajvCompile = function(ref, rel) {
+      var key = rel + "://" + ref;
+
+      if (this.hasKey(this.compiled, key)) {
+        return this.compiled[key];
       }
 
-      this.compiled[ref] = this.ajv.compile({"$ref": ref});
-      return this.compiled[ref];
+      this.compiled[key] = this.ajv.compile(
+        this.linkRels[rel](ref)
+      );
+
+      return this.compiled[key];
+    };
+
+    this.hasKey = function(obj, key) {
+      return Object.prototype.hasOwnProperty.call(obj, key);
     };
   }]);
 })();

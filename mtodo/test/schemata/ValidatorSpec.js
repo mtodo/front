@@ -41,12 +41,23 @@
     properties: {
       message: {"$ref": "#/definitions/welcome/definitions/message"}
     },
+    required: ["message"],
     links: [
     {
       description: "Default welcome",
       href: "/welcome",
       method: "GET",
       rel: "self",
+      schema: {
+        type: ["object"],
+        properties: {}
+      }
+    },
+    {
+      description: "All welcomes",
+      href: "/welcomes",
+      method: "GET",
+      rel: "instances",
       schema: {
         type: ["object"],
         properties: {}
@@ -126,6 +137,47 @@
         var v = Validator.request("nope", "GET", "/stuff", {});
         expect(v).toEqual(false);
         expect(Validator.error.message).toEqual("Resource nope is not found");
+      });
+    });
+
+    describe("response validation", () => {
+      it("passes for link with correct response", () => {
+        var v = Validator.response("welcome", "GET", "/welcome", {message: "hello"});
+        expect(v).toEqual(true);
+        expect(Validator.error.message).toEqual("");
+      });
+
+      it("passes for link with rel=instances", () => {
+        var v = Validator.response("welcome", "GET", "/welcomes", [
+          {message: "hello"},
+          {message: "hi, world"}
+        ]);
+
+        expect(v).toEqual(true);
+        expect(Validator.error.message).toEqual("");
+      });
+
+      it("fails for link with incorrect response", () => {
+        var v = Validator.response("welcome", "GET", "/welcome", {stuff: "hello"});
+        expect(v).toEqual(false);
+        expect(Validator.error.message).toEqual("should have required property 'message'");
+      });
+
+      it("fails for link with rel=instances and non-array response", () => {
+        var v = Validator.response("welcome", "GET", "/welcomes", {message: "hello"});
+        expect(v).toEqual(false);
+        expect(Validator.error.message).toEqual("should be array");
+      });
+
+      it("fails for link with rel=instances and incorrect objects in array", () => {
+        var v = Validator.response("welcome", "GET", "/welcomes", [
+          {some: "stuff"},
+          {message: "hello"},
+          {another: "stuff"}
+        ]);
+
+        expect(v).toEqual(false);
+        expect(Validator.error.message).toEqual("should have required property 'message'");
       });
     });
   });
