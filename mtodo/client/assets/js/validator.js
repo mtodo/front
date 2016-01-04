@@ -8,9 +8,31 @@
     this.error = {message: ""};
     this.ajv = {};
     this.compiled = {};
+    this.alreadySet = false;
+
+    this.setDefaultSchema = function(urlPrefix, done) {
+      var that = this;
+
+      if (that.alreadySet) {
+        done(true);
+        return;
+      }
+
+      $http({method: "GET", url: urlPrefix + "assets/json/schemata.json"})
+        .then(function success(response) {
+          that.setSchema(urlPrefix, response.data, done);
+        }, function failure(response) {
+          done(false);
+        });
+    };
 
     this.setSchema = function(urlPrefix, schema, done) {
       var that = this;
+
+      if (that.alreadySet) {
+        done(true);
+        return;
+      }
 
       that.resources = {};
       for (var resource in schema.definitions) {
@@ -22,6 +44,7 @@
         that.ajv = Ajv();
         that.ajv.addMetaSchema(response.data, "http://json-schema.org/draft-04/hyper-schema", true);
         that.ajv.addSchema(schema, "schemata");
+        that.alreadySet = true;
         done(true);
       }, function failure(response) {
         done(false);

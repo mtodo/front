@@ -49,6 +49,7 @@ var paths = {
   appJS: [
     'client/assets/js/app.js',
     'client/assets/js/first_todo.js',
+    'client/assets/js/signup.js',
     'client/assets/js/validator.js'
   ],
   // Files for app resources
