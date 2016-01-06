@@ -1,0 +1,1 @@
+web: java $JVM_OPTS -cp target/mtodo.jar clojure.main -m mtodo.server
