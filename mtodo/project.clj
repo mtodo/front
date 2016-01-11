@@ -15,17 +15,16 @@
                  [compojure "1.4.0"]
                  [hiccup "1.0.5"]
                  [environ "1.0.1"]
-                 [org.clojure/clojurescript "1.7.170" :scope "provided"]
+                 [org.clojure/clojurescript "1.7.228" :scope "provided"]
                  [secretary "1.2.3"]
                  [venantius/accountant "0.1.6"
-                  :exclusions [org.clojure/tools.reader]]
-                 
-                 ]
+                  :exclusions [org.clojure/tools.reader]]]
 
   :plugins [[lein-environ "1.0.1"]
             [lein-cljsbuild "1.1.1"]
             [lein-asset-minifier "0.2.4"
-             :exclusions [org.clojure/clojure]]]
+             :exclusions [org.clojure/clojure]]
+            [lein-doo "0.1.6"]]
 
   :ring {:handler mtodo.handler/app
          :uberwar-name "mtodo.war"}
@@ -47,12 +46,22 @@
   {:assets
    {"resources/public/css/site.min.css" "resources/public/css/site.css"}}
 
+  :doo {:paths {:karma "./node_modules/karma/bin/karma"}}
+
   :cljsbuild {:builds {:app {:source-paths ["src/cljs" "src/cljc"]
                              :compiler {:output-to "target/cljsbuild/public/js/app.js"
                                         :output-dir "target/cljsbuild/public/js/out"
                                         :asset-path   "js/out"
                                         :optimizations :none
-                                        :pretty-print  true}}}}
+                                        :pretty-print  true}}
+                       :test {:source-paths ["src/cljs" "src/cljc"
+                                             "test/cljs" "test/cljc"]
+                              :compiler {:output-to "target/cljsbuild/public/js/testable.js"
+                                         :output-dir "target/cljsbuild/public/js/out"
+                                         :asset-path "js/out"
+                                         :optimizations :none
+                                         :pretty-print true
+                                         :main mtodo.tests-runner}}}}
 
   :profiles {:dev {:repl-options {:init-ns mtodo.repl}
 
@@ -69,7 +78,7 @@
                                                 org.clojure/clojurescript
                                                 org.clojure/core.async
                                                 org.clojure/tools.analyzer.jvm]]
-                                  [org.clojure/clojurescript "1.7.170"
+                                  [org.clojure/clojurescript "1.7.228"
                                    :exclusions [org.clojure/clojure org.clojure/tools.reader]]
                                   [org.clojure/tools.nrepl "0.2.12"]
                                   [com.cemerick/piggieback "0.2.1"]
