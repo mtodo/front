@@ -7,49 +7,31 @@
 ;; -------------------------
 ;; Reducers
 
-(defmulti todos-reducer (fn [state ty data] ty))
-
-(defmethod todos-reducer :todo-add [state ty data]
-  (let [state (update-in state [:counter] inc)
-        id (:counter state)
-        title (:title data)
-        done (:done data)
-        state (assoc-in state [:todos id]
-                        (atom {:id id :title title :done done}))]
+(defmulti todo-reducer (fn [state ty data] ty))
+(defmethod todo-reducer :default [state ty data]
+  (do
+    (.error js/console "Redux: Unknown action type: " (str ty))
     state))
 
-(defmethod todos-reducer :todo-reset [state ty data]
-  (assoc-in state [:todos] (sorted-map)))
+(defmethod todo-reducer :todo-reset [state ty data]
+  (assoc state :todos (sorted-map)))
 
-(defmethod todos-reducer :default [state ty data] state)
+(defmethod todo-reducer :todo-add [state ty {:keys [title done]}]
+  (let [state (update state :counter inc)
+        id (:counter state)]
+    (assoc-in state [:todos id] {:id id :title title :done done})))
 
-(defmulti todo-reducer (fn [state ty data] ty))
-(defn if-todo-same? [state data new-state]
-  (if (-> (:id state) (= (:id data))) new-state state))
+(defmethod todo-reducer :todo-toggle [state ty {:keys [id]}]
+  (update-in state [:todos id :done] not))
 
-(defmethod todo-reducer :todo-complete [state ty data]
-  (if-todo-same? state data
-    (assoc state :done true)))
+(defmethod todo-reducer :todo-edit [state ty {:keys [id]}]
+  (assoc-in state [:todos id :editing] true))
 
-(defmethod todo-reducer :todo-toggle [state ty data]
-  (if-todo-same? state data
-    (do
-      (.log js/console "todo-toggle for id=" (:id data) " state.id=" (:id state))
-      (update state :done not))))
+(defmethod todo-reducer :todo-edit-save [state ty {:keys [id title]}]
+  (assoc-in state [:todos id :title] title))
 
-(defmethod todo-reducer :todo-edit-save [state ty data]
-  (if-todo-same? state data
-    (assoc state :title (:title data))))
-
-(defmethod todo-reducer :todo-edit [state ty data]
-  (if-todo-same? state data
-    (assoc state :editing true)))
-
-(defmethod todo-reducer :todo-edit-stop [state ty data]
-  (if-todo-same? state data
-    (assoc state :editing false)))
-
-(defmethod todo-reducer :default [state ty data] state)
+(defmethod todo-reducer :todo-edit-stop [state ty {:keys [id]}]
+  (assoc-in state [:todos id :editing] false))
 
 ;; -------------------------
 ;; Data
@@ -57,15 +39,13 @@
 (defonce state (atom {:counter 0
                       :todos (sorted-map)}))
 
+(def reducers [todo-reducer])
+
 (defn redux [state reducers ty data]
   (reduce #(%2 %1 ty data) state reducers))
 
 (defn dispatch! [ty data]
-  (do
-    (swap! state redux [todos-reducer] ty data)
-    (doall
-      (map #(swap! % redux [todo-reducer] ty data)
-           (vals (:todos @state))))))
+  (swap! state redux reducers ty data))
 
 (def init
   (do
@@ -107,14 +87,10 @@
                   :on-stop #(dispatch! :todo-edit-stop {:id id})}]
        [:label {:on-click #(dispatch! :todo-edit {:id id})} title])]))
 
-(defn todolistitemwrap [todo]
-  [:div
-   [todolistitem @todo]])
-
 (defn todolist [todos]
   [:ul
    (for [id (keys todos)]
-     ^{:key id} [todolistitemwrap (get todos id)])])
+     ^{:key id} [todolistitem (get todos id)])])
 
 (defn home-page []
   [:div [:h2 "Welcome to mtodo"]
