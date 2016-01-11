@@ -5,5 +5,4 @@
 (defn page []
   [:div [:h2 "Welcome to mtodo"]
    [:div [:a {:href "/about"} "go to about page"]]
-   [:div [:h3 "Your todos"]]
-   [:div [todolist/todolist (:todos @data/state)]]])
+   [:div [:a {:href "/example"} "go to example page"]]])

@@ -4,6 +4,7 @@
             [secretary.core :as secretary :include-macros true]
             [accountant.core :as accountant]
             [mtodo.containers.home :as home]
+            [mtodo.containers.example :as example]
             [mtodo.containers.about :as about]))
 
 ;; -------------------------
@@ -17,6 +18,9 @@
 
 (secretary/defroute "/about" []
                     (session/put! :current-page #'about/page))
+
+(secretary/defroute "/example" []
+                    (session/put! :current-page #'example/page))
 
 ;; -------------------------
 ;; Initialize app
