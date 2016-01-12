@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+mkdir -p ./.phantomjs
+
+user="-u $(id -u):$(id -g)"
+if [[ "$(uname)" = "Darwin" ]]; then
+  user=""
+fi
+
+docker run \
+  --rm \
+  -v $(pwd):$(pwd) \
+  -w $(pwd) \
+  -e HOME="$(pwd)/.phantomjs" \
+  $user \
+  wernight/phantomjs \
+  phantomjs --debug=true "$@"

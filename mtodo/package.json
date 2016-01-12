@@ -1,7 +1,0 @@
-{
-  "dependencies": {},
-  "devDependencies": {
-    "karma": "^0.13.19",
-    "karma-cljs-test": "^0.1.0"
-  }
-}
