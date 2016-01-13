@@ -1,6 +1,7 @@
 (ns mtodo.test
     (:require [cljs.test :refer-macros [run-all-tests]]
-              [mtodo.core-test]))
+              [mtodo.core-test]
+              [mtodo.signup-test]))
 
 (enable-console-print!)
 

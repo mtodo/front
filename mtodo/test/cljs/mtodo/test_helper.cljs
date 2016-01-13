@@ -27,3 +27,6 @@
       true
       (do (println "Not found: " res)
           false))))
+
+(defn contained-in [x container]
+  (some #(= x %) container))
