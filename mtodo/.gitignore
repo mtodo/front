@@ -17,4 +17,4 @@ pom.xml.asc
 /node_modules/
 
 # compiled
-/mtodo/resources/test/test.js
+/resources/test/test.js
