@@ -15,3 +15,6 @@ pom.xml.asc
 *.log
 /.env
 /node_modules/
+
+# compiled
+/mtodo/resources/test/test.js
