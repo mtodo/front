@@ -22,7 +22,7 @@ page.open(url, function (status) {
 
   setTimeout(function() {
     page.evaluate(function() {
-      //OUR TESTS WILL BE EXECUTED HERE!!!
+      mtodo.test.run();
     });
 
     setTimeout(function() { // https://github.com/ariya/phantomjs/issues/12697

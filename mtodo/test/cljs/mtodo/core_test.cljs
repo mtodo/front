@@ -5,8 +5,6 @@
             [mtodo.containers.home :as home]))
 
 
-(.log js/console "in mtodo.core-test")
-
 (def isClient (not (nil? (try (.-document js/window)
                               (catch js/Object e nil)))))
 

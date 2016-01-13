@@ -13,5 +13,5 @@ docker run \
   -w $(pwd) \
   -e HOME="$(pwd)/.phantomjs" \
   $user \
-  wernight/phantomjs \
-  phantomjs --debug=true "$@"
+  wernight/phantomjs:2 \
+  phantomjs "$@"
