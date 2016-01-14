@@ -18,3 +18,4 @@ pom.xml.asc
 
 # compiled
 /resources/test/test.js
+/.phantomjs/

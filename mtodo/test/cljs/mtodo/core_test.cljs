@@ -6,4 +6,4 @@
 (deftest test-home
   (with-mounted-component (home/page)
     (fn [c div]
-        (is (found-in #"Welcome to" div)))))
+        (is (-> ["h2" {} "Welcome to mtodo"] (found-in div))))))
