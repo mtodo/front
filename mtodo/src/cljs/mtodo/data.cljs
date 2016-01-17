@@ -8,9 +8,11 @@
 (defonce state (reagent/atom {:counter 0
                               :todos (sorted-map)}))
 
-(def push! (redux/store state
-                        [todos-reducers/r
-                         todo-reducers/r]))
+(def *push!* (redux/store state
+                          [todos-reducers/r
+                           todo-reducers/r]))
+
+(def push! (redux/push *push!*))
 
 (def init
   (do

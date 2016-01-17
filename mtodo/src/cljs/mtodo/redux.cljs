@@ -27,6 +27,12 @@
 
 (defn store [state reducers]
   (let [f (fn [ty data] (swap! state redux reducers ty data))]
-    (fn
-      ([ty data] (f ty data))
-      ([[ty data]] (f ty data)))))
+    (atom
+      (fn
+        ([ty data] (f ty data))
+        ([[ty data]] (f ty data))))))
+
+(defn push [push-atom]
+  (fn
+     ([ty data] (@push-atom ty data))
+     ([[ty data]] (@push-atom ty data))))

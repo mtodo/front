@@ -1,4 +1,5 @@
-(ns mtodo.containers.signup)
+(ns mtodo.containers.signup
+    (:require [mtodo.data :as data]))
 
 (def ^:private signup *ns*)
 
@@ -11,14 +12,19 @@
 (defn confirm [value]
   [:input {:type "password" :name "confirm" :value value}])
 
+(defn submit [signup]
+  [:a {:href "#"
+       :on-click #(data/push! :signup-submit signup)}
+   "Start achieving"])
+
 (defn form [signup]
   [:form
    [email (:email signup)]
    [password (:password signup)]
    [confirm (:confirm signup)]
-   [:a {:href "#"} "Start achieving"]])
+   [submit]])
 
 (defn root [signup]
   [:div
-    [:h1 "Signup"]
-    [form signup]])
+   [:h1 "Signup"]
+   [form signup]])

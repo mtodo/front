@@ -1,5 +1,7 @@
 (ns mtodo.test-helper
-    (:require [reagent.core :as reagent]))
+    (:require [reagent.core :as reagent]
+              [mtodo.data :as data]
+              [mtodo.redux :as redux]))
 
 (def is-client (not (nil? (try (.-document js/window)
                                (catch js/Object e nil)))))
@@ -20,6 +22,13 @@
         (reagent/unmount-component-at-node div)
         (rflush)
         (.removeChild (.-body js/document) div)))))
+
+(defn with-reducer [capture-ty handler f]
+  (do
+    (reset! data/*push!*
+            (fn [ty data]
+                (if (-> ty (= capture-ty)) (handler data))))
+    (f)))
 
 (defn re-found-in [re div]
   (let [res (.-innerHTML div)]
@@ -44,3 +53,10 @@
             false)))
       (do (println "Not found:" selector)
         false))))
+
+(defn click! [div selector]
+  (let [elem (.querySelector div (name selector))]
+    (let [event (.createEvent js/document "MouseEvent")]
+      (do
+        (.initMouseEvent event "click" {"view" js/window "bubbles" true "cancellable" true})
+        (.dispatchEvent elem event)))))

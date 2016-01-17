@@ -1,6 +1,6 @@
 (ns mtodo.signup-test
-    (:require [cljs.test :refer-macros [is are deftest testing use-fixtures]]
-              [mtodo.test-helper :refer [with-mounted-component found-in contained-in]]
+    (:require [cljs.test :refer-macros [is are deftest testing use-fixtures async]]
+              [mtodo.test-helper :refer [with-mounted-component with-reducer found-in contained-in click!]]
               [mtodo.containers.signup :as signup]))
 
 (deftest test-signup
@@ -43,5 +43,20 @@
 
     (testing "form has confirm"
              (is (-> [signup/confirm "welcome"] (contained-in (signup/form {:confirm "welcome"})))))
+
+    ))
+
+(deftest test-signup-events
+  (let [john {:email "john.smith@example.org" :password "welcome" :confirm "welcome"}]
+
+    (testing "click submit button"
+             (let [submitted (atom nil)]
+               (with-reducer :signup-submit #(reset! submitted %)
+                 (fn []
+                     (with-mounted-component (signup/submit john)
+                       (fn [c div]
+                           (do
+                             (click! div :a)
+                             (is (-> @submitted (= john))))))))))
 
     ))
