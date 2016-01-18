@@ -22,7 +22,7 @@
    [email (:email signup)]
    [password (:password signup)]
    [confirm (:confirm signup)]
-   [submit]])
+   [submit signup]])
 
 (defn root [signup]
   [:div

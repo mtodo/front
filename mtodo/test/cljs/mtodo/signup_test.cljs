@@ -17,6 +17,9 @@
                    (is (-> [:form {}] (found-in div)))
                    (is (-> [:a {} "Start achieving"] (found-in div))))))
 
+    (testing "form has submit button"
+             (is (-> [signup/submit john] (contained-in (signup/form john)))))
+
     (testing "root has form"
              (is (-> [signup/form john] (contained-in (signup/root john)))))
 
