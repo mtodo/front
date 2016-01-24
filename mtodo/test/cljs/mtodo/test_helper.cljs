@@ -30,6 +30,14 @@
                 (if (-> ty (= capture-ty)) (handler data))))
     (f)))
 
+(defn with-recorder [f]
+  (let [got (atom nil)]
+    (do
+      (reset! data/*push!*
+              (fn [ty data]
+                  (reset! got [ty data])))
+      (f got))))
+
 (defn re-found-in [re div]
   (let [res (.-innerHTML div)]
     (if (re-find re res)
