@@ -7,9 +7,11 @@
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [ring-server "0.4.0"]
                  [reagent "0.5.1"
-                  :exclusions [org.clojure/tools.reader]]
+                  :exclusions [org.clojure/tools.reader cljsjs/react]]
                  [reagent-forms "0.5.13"]
                  [reagent-utils "0.1.7"]
+                 [cljsjs/react-with-addons "0.13.3-0"]
+                 [cljs-react-test "0.1.3-SNAPSHOT"]
                  [ring "1.4.0"]
                  [ring/ring-defaults "0.1.5"]
                  [compojure "1.4.0"]

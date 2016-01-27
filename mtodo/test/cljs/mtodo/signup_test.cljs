@@ -1,6 +1,6 @@
 (ns mtodo.signup-test
     (:require [cljs.test :refer-macros [is are deftest testing use-fixtures async]]
-              [mtodo.test-helper :refer [with-mounted-component with-recorder found-in contained-in click!]]
+              [mtodo.test-helper :refer [with-mounted-component with-recorder found-in contained-in click! edit!]]
               [mtodo.containers.signup :as signup]))
 
 (deftest test-signup
@@ -60,5 +60,14 @@
                          (do
                            (click! div :a)
                            (is (-> @got (= [:signup-submit john])))))))))
+
+    (testing "editing email"
+             (with-recorder
+               (fn [got]
+                   (with-mounted-component (signup/email "john@example.org")
+                     (fn [c div]
+                         (do
+                           (edit! div :input "sarah@example.org")
+                           (is (-> @got (= [:signup-edit-email {:email "sarah@example.org"}])))))))))
 
     ))

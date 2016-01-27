@@ -1,10 +1,12 @@
 (ns mtodo.containers.signup
-    (:require [mtodo.data :as data]))
+    (:require [mtodo.data :as data]
+              [mtodo.components.inputbox :as inputbox]))
 
 (def ^:private signup *ns*)
 
 (defn email [value]
-  [:input {:type "email" :name "email" :value value}])
+  [inputbox/raw {:type "email" :name "email" :text value
+                 :on-save #(data/push! :signup-edit-email {:email %})}])
 
 (defn password [value]
   [:input {:type "password" :name "password" :value value}])

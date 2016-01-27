@@ -1,5 +1,6 @@
 (ns mtodo.test-helper
     (:require [reagent.core :as reagent]
+              [cljs-react-test.simulate :as sim]
               [mtodo.data :as data]
               [mtodo.redux :as redux]))
 
@@ -68,3 +69,12 @@
       (do
         (.initMouseEvent event "click" {"view" js/window "bubbles" true "cancellable" true})
         (.dispatchEvent elem event)))))
+
+(defn edit! [div selector value]
+  (let [elem (.querySelector div (name selector))]
+    (let [event (.createEvent js/document "HTMLEvents")]
+      (do
+        (.focus elem)
+        (set! (.-value elem) value)
+        (sim/change elem nil)
+        (.blur elem)))))
