@@ -65,16 +65,12 @@
 
 (defn click! [div selector]
   (let [elem (.querySelector div (name selector))]
-    (let [event (.createEvent js/document "MouseEvent")]
-      (do
-        (.initMouseEvent event "click" {"view" js/window "bubbles" true "cancellable" true})
-        (.dispatchEvent elem event)))))
+    (sim/click elem nil)))
 
 (defn edit! [div selector value]
   (let [elem (.querySelector div (name selector))]
-    (let [event (.createEvent js/document "HTMLEvents")]
-      (do
-        (.focus elem)
-        (set! (.-value elem) value)
-        (sim/change elem nil)
-        (.blur elem)))))
+    (do
+      (.focus elem)
+      (set! (.-value elem) value)
+      (sim/change elem nil)
+      (.blur elem))))
