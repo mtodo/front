@@ -70,4 +70,13 @@
                            (edit! div :input "sarah@example.org")
                            (is (-> @got (= [:signup-edit-email {:email "sarah@example.org"}])))))))))
 
+    (testing "editing password"
+             (with-recorder
+               (fn [got]
+                   (with-mounted-component (signup/password "welcome")
+                     (fn [c div]
+                         (do
+                           (edit! div :input "helloworld")
+                           (is (-> @got (= [:signup-edit-password {:password "helloworld"}])))))))))
+
     ))

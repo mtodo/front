@@ -9,7 +9,8 @@
                  :on-save #(data/push! :signup-edit-email {:email %})}])
 
 (defn password [value]
-  [:input {:type "password" :name "password" :value value}])
+  [inputbox/raw {:type "password" :name "password" :text value
+                 :on-save #(data/push! :signup-edit-password {:password %})}])
 
 (defn confirm [value]
   [:input {:type "password" :name "confirm" :value value}])
