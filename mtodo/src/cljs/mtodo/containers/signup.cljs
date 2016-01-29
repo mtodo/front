@@ -6,11 +6,11 @@
 
 (defn email [value]
   [inputbox/raw {:type "email" :name "email" :text value
-                 :on-save #(data/push! :signup-edit-email {:email %})}])
+                 :on-save #(data/push! :signup-edit {:email %})}])
 
 (defn password [value]
   [inputbox/raw {:type "password" :name "password" :text value
-                 :on-save #(data/push! :signup-edit-password {:password %})}])
+                 :on-save #(data/push! :signup-edit {:password %})}])
 
 (defn confirm [value]
   [:input {:type "password" :name "confirm" :value value}])

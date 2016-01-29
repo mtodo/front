@@ -39,6 +39,13 @@
                   (reset! got [ty data])))
       (f got))))
 
+(defn mount [comp f]
+  (with-recorder
+    (fn [got]
+        (with-mounted-component comp
+          (fn [c div]
+              (f c div got))))))
+
 (defn re-found-in [re div]
   (let [res (.-innerHTML div)]
     (if (re-find re res)
