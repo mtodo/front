@@ -2,19 +2,18 @@
     (:require [mtodo.data :as data]
               [mtodo.components.inputbox :as inputbox]))
 
-(def ^:private signup *ns*)
+(defn signup-inputbox [{:keys [ty field text]}]
+  [inputbox/raw {:type ty :name (name field) :text text
+                 :on-save #(data/push! :signup-edit {field %})}])
 
 (defn email [value]
-  [inputbox/raw {:type "email" :name "email" :text value
-                 :on-save #(data/push! :signup-edit {:email %})}])
+  [signup-inputbox {:ty "email" :field :email :text value}])
 
 (defn password [value]
-  [inputbox/raw {:type "password" :name "password" :text value
-                 :on-save #(data/push! :signup-edit {:password %})}])
+  [signup-inputbox {:ty "password" :field :password :text value}])
 
 (defn confirm [value]
-  [inputbox/raw {:type "password" :name "confirm" :text value
-                 :on-save #(data/push! :signup-edit {:confirm %})}])
+  [signup-inputbox {:ty "password" :field :confirm :text value}])
 
 (defn submit [signup]
   [:a {:href "#"
