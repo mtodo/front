@@ -13,7 +13,8 @@
                  :on-save #(data/push! :signup-edit {:password %})}])
 
 (defn confirm [value]
-  [:input {:type "password" :name "confirm" :value value}])
+  [inputbox/raw {:type "password" :name "confirm" :text value
+                 :on-save #(data/push! :signup-edit {:confirm %})}])
 
 (defn submit [signup]
   [:a {:href "#"

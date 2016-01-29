@@ -63,4 +63,9 @@
                     (edit! div :input "helloworld")
                     (is (-> @got (= [:signup-edit {:password "helloworld"}])))))
 
+    (testing "editing confirmation"
+             (mount (signup/confirm "welcome") [c div got]
+                    (edit! div :input "somecontent")
+                    (is (-> @got (= [:signup-edit {:confirm "somecontent"}])))))
+
     ))
