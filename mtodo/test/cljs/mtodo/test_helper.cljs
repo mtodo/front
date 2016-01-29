@@ -50,7 +50,7 @@
   (some #(= x %) container))
 
 (defn found-in [[selector attrs text] div]
-  (let [elem (.querySelector js/document (name selector))]
+  (let [elem (.querySelector div (name selector))]
     (if elem
       (let [elem-text (clojure.string/trim (.-textContent elem))]
         (if (-> text (= elem-text) (or (nil? text)))

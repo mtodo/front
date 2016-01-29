@@ -1,4 +1,4 @@
-(ns mtodo.core-test
+(ns ^:figwheel-load mtodo.core-test
     (:require [cljs.test :refer-macros [is are deftest testing use-fixtures]]
               [mtodo.test-helper :refer [with-mounted-component found-in]]
               [mtodo.containers.home :as home]))

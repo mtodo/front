@@ -105,9 +105,11 @@
 
                    :env {:dev true}
 
-                   :cljsbuild {:builds {:app {:source-paths ["env/dev/cljs"]
+                   :cljsbuild {:builds {:app {:source-paths ["env/dev/cljs" "test/cljs"]
+                                              :figwheel {:on-jsload "mtodo.test/run"}
                                               :compiler {:main "mtodo.dev"
                                                          :source-map true}}
+
                                         :test {:source-paths ["src/cljs" "src/cljc" "test/cljs"]
                                                :compiler {:output-to "resources/test/test.js"
                                                           :optimizations :whitespace

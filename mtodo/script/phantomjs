@@ -2,12 +2,15 @@
 
 mkdir -p ./.phantomjs
 
+DOCKER_OPTS=${DOCKER_OPTS:-""}
+
 user="-u $(id -u):$(id -g)"
 if [[ "$(uname)" = "Darwin" ]]; then
   user=""
 fi
 
 docker run \
+  $DOCKER_OPTS \
   --rm \
   -v $(pwd):$(pwd) \
   -w $(pwd) \

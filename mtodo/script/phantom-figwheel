@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+export DOCKER_OPTS="-it --net=host"
+
+./script/phantomjs ./resources/test/phantom-figwheel.js http://localhost:3449

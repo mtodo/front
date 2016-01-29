@@ -1,4 +1,4 @@
-(ns mtodo.signup-test
+(ns ^:figwheel-load mtodo.signup-test
     (:require [cljs.test :refer-macros [is are deftest testing use-fixtures async]]
               [mtodo.test-helper :refer [with-mounted-component with-recorder found-in contained-in click! edit!]]
               [mtodo.containers.signup :as signup]))
